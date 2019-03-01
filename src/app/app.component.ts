@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { latLng, LatLngExpression, marker, Marker, tileLayer } from 'leaflet';
+import { icon, latLng, LatLngExpression, marker, Marker, tileLayer } from 'leaflet';
 
 @Component({
 	selector: 'app-root',
@@ -8,7 +8,7 @@ import { latLng, LatLngExpression, marker, Marker, tileLayer } from 'leaflet';
 })
 export class AppComponent implements OnInit {
 	title = 'poa-leaflet';
-	movingMarker = marker(latLng(51.2756228, 4.3345864));
+	markers = [];
 	options = {
 		layers: [
 			tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
@@ -16,10 +16,24 @@ export class AppComponent implements OnInit {
 		zoom: 12,
 		center: latLng(51.2756228, 4.3345864)
 	};
-	layers = [this.movingMarker];
+	layers = [];
 
 	ngOnInit(): void {
-		setInterval(() => this.movingMarker.setLatLng(this.moveLatLngRandomly(this.movingMarker)), 100);
+		for (let i = 0; i < 1000; i++) {
+			const newMarker = marker(
+				latLng(51.2756228 + 0.1 * (Math.random() - 0.5), 4.3345864 + 0.1 * (Math.random() - 0.5)),
+				{
+					icon: icon({
+						iconSize: [ 20, 20 ],
+						iconAnchor: [ 10, 10 ],
+						iconUrl: './assets/ship.png',
+					}),
+				},
+			);
+			this.markers.push(newMarker);
+			this.layers.push(newMarker);
+		}
+		setInterval(() => this.markers.forEach((m: Marker<any>) => m.setLatLng(this.moveLatLngRandomly(m))), 10);
 	}
 
 	private moveLatLngRandomly(mapMarker: Marker): LatLngExpression {
