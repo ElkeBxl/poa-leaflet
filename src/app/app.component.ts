@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { latLng, tileLayer } from 'leaflet';
+import { latLng, marker, tileLayer } from 'leaflet';
 
 @Component({
 	selector: 'app-root',
@@ -15,4 +15,7 @@ export class AppComponent {
 		zoom: 12,
 		center: latLng(51.2756228, 4.3345864)
 	};
+	layers = [
+		marker(latLng(51.2756228, 4.3345864))
+	];
 }
